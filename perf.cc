@@ -1,5 +1,16 @@
 #include <benchmark/benchmark.h>
 
+#define REGISTER_BENCHMARK(NAME, SIZE) static void NAME(benchmark::State &state) { \
+  auto s = SIZE; \
+  float __attribute__((aligned(32))) vals[s]; \
+  GenerateNumbers(vals, s); \
+  for (auto _ : state) { \
+    auto res = sum(vals, s); \
+    benchmark::DoNotOptimize(res); \
+  } \
+} \
+BENCHMARK(NAME)
+
 float avx512_sum(float *vals, size_t size) {
   int __attribute__((aligned(64)))
   permute1[] = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14};
@@ -204,4 +215,6 @@ static void Sum1024_x_1024(benchmark::State &state) {
 }
 // Register the function as a benchmark
 BENCHMARK(Sum1024_x_1024);
+
+REGISTER_BENCHMARK(Sum8192, 8192);
 BENCHMARK_MAIN();
