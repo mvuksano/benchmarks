@@ -2,7 +2,7 @@
 
 #define REGISTER_BENCHMARK(NAME, FN, SIZE) static void NAME(benchmark::State &state) { \
   auto s = SIZE; \
-  float __attribute__((aligned(32))) vals[s]; \
+  float __attribute__((aligned(64))) vals[s]; \
   GenerateNumbers(vals, s); \
   for (auto _ : state) { \
     auto res = FN(vals, s); \
@@ -91,59 +91,35 @@ REGISTER_BENCHMARK(AvxSum256b, avx_sum, 256);
 REGISTER_BENCHMARK(AvxSum1K, avx_sum, 1024);
 REGISTER_BENCHMARK(AvxSum4K, avx_sum, 4 * 1024);
 REGISTER_BENCHMARK(AvxSum8K, avx_sum, 8 * 1024);
+REGISTER_BENCHMARK(AvxSum16K, avx_sum, 16 * 1024);
+REGISTER_BENCHMARK(AvxSum32K, avx_sum, 32 * 1024);
+REGISTER_BENCHMARK(AvxSum64K, avx_sum, 64 * 1024);
+REGISTER_BENCHMARK(AvxSum128K, avx_sum, 128 * 1024);
+REGISTER_BENCHMARK(AvxSum256K, avx_sum, 256 * 1024);
+REGISTER_BENCHMARK(AvxSum512K, avx_sum, 512 * 1024);
 REGISTER_BENCHMARK(AvxSum1M, avx_sum, 1024 * 1024);
 
-static void Avx512Sum256(benchmark::State &state) {
-  float __attribute__((aligned(64))) vals[256];
-  GenerateNumbers(vals, 256);
-  // Code inside this loop is measured repeatedly
-  for (auto _ : state) {
-    auto res = avx512_sum(vals, 256);
-    benchmark::DoNotOptimize(res);
-  }
-}
-// Register the function as a benchmark
-BENCHMARK(Avx512Sum256);
-
-static void Avx512Sum1024(benchmark::State &state) {
-  float __attribute__((aligned(64))) vals[1024];
-  GenerateNumbers(vals, 1024);
-  // Code inside this loop is measured repeatedly
-  for (auto _ : state) {
-    auto res = avx512_sum(vals, 1024);
-    benchmark::DoNotOptimize(res);
-  }
-}
-// Register the function as a benchmark
-BENCHMARK(Avx512Sum1024);
-
-static void Avx512Sum1024_x_1024(benchmark::State &state) {
-  auto s = 1024 * 1024;
-  float __attribute__((aligned(64))) vals[s];
-  GenerateNumbers(vals, s) ;
-  // Code inside this loop is measured repeatedly
-  for (auto _ : state) {
-    auto res = avx512_sum(vals, s);
-    benchmark::DoNotOptimize(res);
-  }
-}
-// Register the function as a benchmark
-BENCHMARK(Avx512Sum1024_x_1024);
-static void Avx512Sum4096(benchmark::State &state) {
-  float __attribute__((aligned(64))) vals[4096];
-  GenerateNumbers(vals, 4096);
-  // Code inside this loop is measured repeatedly
-  for (auto _ : state) {
-    auto res = avx512_sum(vals, 4096);
-    benchmark::DoNotOptimize(res);
-  }
-}
-// Register the function as a benchmark
-BENCHMARK(Avx512Sum4096);
+REGISTER_BENCHMARK(Avx512Sum256b, avx512_sum, 256);
+REGISTER_BENCHMARK(Avx512Sum1K, avx512_sum, 1024);
+REGISTER_BENCHMARK(Avx512Sum4K, avx512_sum, 4 * 1024);
+REGISTER_BENCHMARK(Avx512Sum8K, avx512_sum, 8 * 1024);
+REGISTER_BENCHMARK(Avx512Sum16K, avx512_sum, 16 * 1024);
+REGISTER_BENCHMARK(Avx512Sum32K, avx512_sum, 32 * 1024);
+REGISTER_BENCHMARK(Avx512Sum64K, avx512_sum, 64 * 1024);
+REGISTER_BENCHMARK(Avx512Sum128K, avx512_sum, 128 * 1024);
+REGISTER_BENCHMARK(Avx512Sum256K, avx512_sum, 256 * 1024);
+REGISTER_BENCHMARK(Avx512Sum512K, avx512_sum, 512 * 1024);
+REGISTER_BENCHMARK(Avx512Sum1M, avx512_sum, 1024 * 1024);
 
 REGISTER_BENCHMARK(Sum256b, sum, 256);
 REGISTER_BENCHMARK(Sum1K, sum, 1024);
 REGISTER_BENCHMARK(Sum4K, sum, 4096);
 REGISTER_BENCHMARK(Sum8K, sum, 8192);
+REGISTER_BENCHMARK(Sum16K, sum, 16 * 1024);
+REGISTER_BENCHMARK(Sum32K, sum, 32 * 1024);
+REGISTER_BENCHMARK(Sum64K, sum, 64 * 1024);
+REGISTER_BENCHMARK(Sum128K, sum, 128 * 1024);
+REGISTER_BENCHMARK(Sum256K, sum, 256 * 1024);
+REGISTER_BENCHMARK(Sum512K, sum, 512 * 1024);
 REGISTER_BENCHMARK(Sum1M, sum, 1024 * 1024);
 BENCHMARK_MAIN();
