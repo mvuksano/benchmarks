@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 
-#define REGISTER_BENCHMARK(NAME, FN, SIZE) static void NAME(benchmark::State &state) { \
-  auto s = SIZE; \
+#define REGISTER_BENCHMARK(NAME, FN) static void NAME(benchmark::State &state) { \
+  auto s = state.range(0); \
   float __attribute__((aligned(64))) vals[s]; \
   GenerateNumbers(vals, s); \
   for (auto _ : state) { \
@@ -9,7 +9,7 @@
     benchmark::DoNotOptimize(res); \
   } \
 } \
-BENCHMARK(NAME)
+BENCHMARK(NAME)->RangeMultiplier(2)->Range(8, 8<<17);
 
 float avx512_sum(float *vals, size_t size) {
   int __attribute__((aligned(64)))
@@ -87,39 +87,8 @@ static void GenerateNumbers(float *nums, size_t size) {
   }
 }
 
-REGISTER_BENCHMARK(AvxSum256b, avx_sum, 256);
-REGISTER_BENCHMARK(AvxSum1K, avx_sum, 1024);
-REGISTER_BENCHMARK(AvxSum4K, avx_sum, 4 * 1024);
-REGISTER_BENCHMARK(AvxSum8K, avx_sum, 8 * 1024);
-REGISTER_BENCHMARK(AvxSum16K, avx_sum, 16 * 1024);
-REGISTER_BENCHMARK(AvxSum32K, avx_sum, 32 * 1024);
-REGISTER_BENCHMARK(AvxSum64K, avx_sum, 64 * 1024);
-REGISTER_BENCHMARK(AvxSum128K, avx_sum, 128 * 1024);
-REGISTER_BENCHMARK(AvxSum256K, avx_sum, 256 * 1024);
-REGISTER_BENCHMARK(AvxSum512K, avx_sum, 512 * 1024);
-REGISTER_BENCHMARK(AvxSum1M, avx_sum, 1024 * 1024);
+REGISTER_BENCHMARK(AVXSum, avx_sum);
+REGISTER_BENCHMARK(AVX512Sum, avx512_sum);
+REGISTER_BENCHMARK(SUM, sum);
 
-REGISTER_BENCHMARK(Avx512Sum256b, avx512_sum, 256);
-REGISTER_BENCHMARK(Avx512Sum1K, avx512_sum, 1024);
-REGISTER_BENCHMARK(Avx512Sum4K, avx512_sum, 4 * 1024);
-REGISTER_BENCHMARK(Avx512Sum8K, avx512_sum, 8 * 1024);
-REGISTER_BENCHMARK(Avx512Sum16K, avx512_sum, 16 * 1024);
-REGISTER_BENCHMARK(Avx512Sum32K, avx512_sum, 32 * 1024);
-REGISTER_BENCHMARK(Avx512Sum64K, avx512_sum, 64 * 1024);
-REGISTER_BENCHMARK(Avx512Sum128K, avx512_sum, 128 * 1024);
-REGISTER_BENCHMARK(Avx512Sum256K, avx512_sum, 256 * 1024);
-REGISTER_BENCHMARK(Avx512Sum512K, avx512_sum, 512 * 1024);
-REGISTER_BENCHMARK(Avx512Sum1M, avx512_sum, 1024 * 1024);
-
-REGISTER_BENCHMARK(Sum256b, sum, 256);
-REGISTER_BENCHMARK(Sum1K, sum, 1024);
-REGISTER_BENCHMARK(Sum4K, sum, 4096);
-REGISTER_BENCHMARK(Sum8K, sum, 8192);
-REGISTER_BENCHMARK(Sum16K, sum, 16 * 1024);
-REGISTER_BENCHMARK(Sum32K, sum, 32 * 1024);
-REGISTER_BENCHMARK(Sum64K, sum, 64 * 1024);
-REGISTER_BENCHMARK(Sum128K, sum, 128 * 1024);
-REGISTER_BENCHMARK(Sum256K, sum, 256 * 1024);
-REGISTER_BENCHMARK(Sum512K, sum, 512 * 1024);
-REGISTER_BENCHMARK(Sum1M, sum, 1024 * 1024);
 BENCHMARK_MAIN();
