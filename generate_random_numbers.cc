@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 int main(int argc, char **argv) {
-	int nums_fd = open("nums", O_CREAT | O_WRONLY | O_TRUNC);
+	int nums_fd = open("nums", O_CREAT | O_RDWR | O_TRUNC);
 	if(nums_fd <0 ) {
 		printf("Could not open file \"nums\".\n");
 		exit(1);

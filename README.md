@@ -46,3 +46,14 @@ Sum4096                    10.9 us         10.9 us        64052
 Sum1024_x_1024             2822 us         2822 us          248
 Sum8192                    21.9 us         21.9 us        31976
 ```
+
+
+# Random number generator
+
+This program is used to generate a sequence of random numbers that can se used for benchmarking. Idea is to generate a sequence of numbers, store it into a file and use it to benchmark different scenarios.
+
+Numnbers are stored in binary format. You tool like hexdump to view exact content. E.g.:
+
+```
+hexdump -e '1/8 "%016x" "\n"' nums
+```
