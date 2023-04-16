@@ -57,3 +57,9 @@ Numnbers are stored in binary format. You tool like hexdump to view exact conten
 ```
 hexdump -e '1/8 "%016x" "\n"' nums
 ```
+
+Build:
+
+```
+g++ -march=native generate_random_numbers.cc
+```
