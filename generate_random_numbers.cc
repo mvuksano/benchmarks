@@ -11,9 +11,9 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  for (int i = 0; i < 1024 * 1024; i++) {
-    uint64_t val;
-    auto res = _rdrand64_step(&val);
+  for (int i = 0; i < 1024 * 1024 * 64; i++) {
+    uint32_t val;
+    auto res = _rdrand32_step(&val);
     write(nums_fd, &val, sizeof(val));
   }
   close(nums_fd);

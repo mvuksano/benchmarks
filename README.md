@@ -10,11 +10,23 @@ https://github.com/mvuksano/benchmarks.git
 Clone google/benchmark as subfolder
 https://github.com/google/benchmark.git
 
+Clone x86-simd-sort as subfolder:
+git clone https://github.com/intel/x86-simd-sort.git
+
 Build:
 g++ -g perf.cc -std=c++17 -isystem benchmark/include -Lbenchmark/build/src -lbenchmark -lpthread -o mybenchmark
 
 Run:
 ./mybenchmark --benchmark_filter=".*Sum1024_x.*$" --benchmark_min_time=3s --benchmark_time_unit=ms
+
+Build targets:
+cmake --build build
+
+Run sort benchmark:
+
+```
+./build/sort 
+```
 
 
 Example run:
