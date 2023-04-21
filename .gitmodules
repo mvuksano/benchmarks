@@ -1,0 +1,6 @@
+[submodule "benchmark"]
+	path = benchmark
+	url = https://github.com/google/benchmark.git
+[submodule "x86-simd-sort"]
+	path = x86-simd-sort
+	url = https://github.com/intel/x86-simd-sort.git
