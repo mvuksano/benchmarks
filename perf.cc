@@ -12,14 +12,6 @@
 BENCHMARK(NAME)->RangeMultiplier(2)->Range(8, 8<<17);
 
 float avx512_sum(float *vals, size_t size) {
-  int __attribute__((aligned(64)))
-  permute1[] = {1, 0, 3, 2, 5, 4, 7, 6, 9, 8, 11, 10, 13, 12, 15, 14};
-  int __attribute__((aligned(64)))
-  permute2[] = {2, 3, 0, 1, 6, 7, 4, 5, 11, 10, 8, 9, 14, 15, 12, 13};
-  int __attribute__((aligned(64)))
-  permute3[] = {4, 5, 6, 7, 0, 1, 2, 3, 12, 13, 14, 15, 8, 9, 10, 11};
-  int __attribute__((aligned(64)))
-  permute4[] = {8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7};
   float result = 0;
   float total = 0;
   float __attribute__((aligned(64))) temp[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -46,7 +38,6 @@ float avx512_sum(float *vals, size_t size) {
 }
 
 float avx_sum(float *vals, size_t size) {
-  int __attribute__((aligned(32))) permute[] = {0, 4, 1, 5, 2, 6, 3, 7};
   float __attribute__((aligned(32))) temp[] = {0, 0, 0, 0, 0, 0, 0, 0};
   float total = 0;
   float result = 0;
