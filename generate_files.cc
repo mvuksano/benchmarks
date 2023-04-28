@@ -1,6 +1,5 @@
 #include <errno.h>
 #include <fcntl.h>
-#include <immintrin.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -36,12 +35,8 @@ void generateFile(uint32_t *data, size_t size, char *fileName) {
 bool populateData(uint32_t *data, size_t size) {
   uint32_t val;
   for (size_t i = 0; i < size / sizeof(val); i++) {
-#ifdef USE_HW_RAND
-    auto res = _rdrand32_step(&val);
-#else
     auto res = random();
-#endif
-    data[i] = val;
+    data[i] = res;
   }
   return true;
 }
