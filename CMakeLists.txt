@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.18)
 project(benchmark)
 
 set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-march=native")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-march=native")
 add_executable(rng generate_random_numbers.cc)
 target_compile_options(rng PUBLIC "-O2")
 
@@ -13,7 +13,6 @@ target_include_directories(sum PUBLIC "benchmark/include")
 target_link_directories(sum PUBLIC "benchmark/build/src")
 target_link_libraries(sum benchmark pthread)
 
-# set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-march=native")
 add_executable(files generate_files.cc)
 
 add_executable(sort sort.cc)
