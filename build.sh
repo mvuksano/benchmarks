@@ -30,6 +30,10 @@ build_project() {
 
   # Change back to the project root directory
   cd ..
+
+  # Build root project
+  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+  cmake --build build
 }
 
 # Function to clean the build directory
