@@ -8,6 +8,8 @@
 
 #include <benchmark/benchmark.h>
 
+#include "sum_naive.h"
+
 #define REGISTER_BENCHMARK(NAME, FN) static void NAME(benchmark::State &state) { \
   auto s = state.range(0); \
   int nums_fd = open("nums", O_RDONLY); \
@@ -117,13 +119,6 @@ float avx_sum(float *vals, size_t size) {
   return total;
 }
 
-float sum(float *vals, size_t size) {
-  float result = 0;
-  for (int i = 0; i < size; i++) {
-    result += vals[i];
-  }
-  return result;
-}
 
 static void GenerateNumbers(float *nums, size_t size) {
   for (size_t i = 0; i < size; i++) {
