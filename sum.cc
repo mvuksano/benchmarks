@@ -11,12 +11,15 @@
 #define REGISTER_BENCHMARK(NAME, FN) static void NAME(benchmark::State &state) { \
   auto s = state.range(0); \
   int nums_fd = open("nums", O_RDONLY); \
-  float *vals = (float *)mmap(NULL, 1024 * 1024 * 64 * sizeof(uint32_t), \
+  size_t mapped_area_size = 1024 * 1024 * 64 * sizeof(uint32_t); \
+  float *vals = (float *)mmap(NULL, mapped_area_size, \
                           PROT_READ | PROT_WRITE, MAP_PRIVATE, nums_fd, 0); \
   for (auto _ : state) { \
     auto res = FN(vals, s); \
     benchmark::DoNotOptimize(res); \
   } \
+  munmap(vals, mapped_area_size); \
+  close(nums_fd); \
 } \
 BENCHMARK(NAME)->RangeMultiplier(2)->Range(8, 8<<23);
 
