@@ -6,8 +6,7 @@ add_compile_options(-march=native -Wall -Wextra -O2 -g)
 add_executable(rng generate_random_numbers.cc)
 
 add_subdirectory(sum)
-
-add_executable(files generate_files.cc)
+add_subdirectory(files)
 
 add_executable(sort sort.cc)
 target_compile_options(sort PUBLIC -mavx512f -mavx512dq)
