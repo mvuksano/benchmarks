@@ -48,6 +48,11 @@ clean_build() {
   cd ..
 }
 
+# Function to fetch all git submodules (dependecies)
+init_deps() {
+  git submodule update --init --recursive
+}
+
 # Check the input option and call the corresponding function
 case "$1" in
   --clean)
@@ -56,10 +61,14 @@ case "$1" in
   --init)
     build_project
     ;;
+  --init-deps)
+    init_deps
+    ;;
   *)
-    echo "Usage: $0 --clean | --init"
-    echo "  --clean  Clean the build directory"
-    echo "  --init   Initialize and build the project"
+    echo "Usage: $0 --clean | --init | --init-deps"
+    echo "  --clean       Clean the build directory"
+    echo "  --init        Initialize and build the project"
+    echo "  --init-deps   Fetch dependencies"
     exit 1
     ;;
 esac
