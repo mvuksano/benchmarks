@@ -1,0 +1,5 @@
+add_executable(sort sort.cc)
+target_compile_options(sort PUBLIC -mavx512f -mavx512dq)
+target_link_directories(sort PUBLIC "${CMAKE_SOURCE_DIR}/benchmark/build/src")
+target_link_libraries(sort benchmark pthread)
+target_include_directories(sort PUBLIC "${CMAKE_SOURCE_DIR}/benchmark/include")
