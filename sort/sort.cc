@@ -9,7 +9,7 @@
 
 #include <benchmark/benchmark.h>
 
-#include "x86-simd-sort/src/avx512-32bit-qsort.hpp"
+#include <avx512-32bit-qsort.hpp>
 
 #define REGISTER_BENCHMARK(NAME, FN) static void NAME(benchmark::State &state) { \
   auto s = state.range(0); \
