@@ -2,6 +2,7 @@
 
 # Detect the operating system
 OS=$(uname)
+LIB_INSTALL_DIR=$(realpath $(dirname "$0"))/installed
 
 OPTS=""
 
@@ -16,20 +17,6 @@ fi
 
 # Function to build the project
 build_project() {
-  # Change to the benchmark directory
-  cd "$(dirname "$0")/benchmark"
-
-  # Create the build directory
-  cmake -E make_directory "build"
-
-  # Change to the build directory, run cmake and go back to the benchmark directory
-  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../
-
-  # Build the project with the specified configuration
-  cmake --build "build" --config Release ${OPTS:+--} ${OPTS}
-
-  # Change back to the project root directory
-  cd ..
 
   # Build root project
   cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1
@@ -54,9 +41,25 @@ init_deps() {
 }
 
 build_deps() {
+  mkdir -p $LIB_INSTALL_DIR
+
+  # Change to the benchmark directory
+  cd "$(dirname "$0")/benchmark"
+  # Create the build directory
+  cmake -E make_directory "build"
+  # Change to the build directory, run cmake and go back to the benchmark directory
+  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../
+  # Build the project with the specified configuration
+  cmake --build "build" --config Release ${OPTS:+--} ${OPTS}
+  # Change back to the project root directory
+  cd ..
+
+  # Change to gflags directory
   cd "$(dirname "$0")/gflags"
-  cmake -B _build -S . -DBUILD_STATIC_LIBS=ON
+  cmake -B _build -S . -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR
   cmake --build _build
+  cd _build
+  make install
 }
 
 # Check the input option and call the corresponding function
@@ -64,7 +67,7 @@ case "$1" in
   --clean)
     clean_build
     ;;
-  --init)
+  --build-main)
     build_project
     ;;
   --init-deps)
@@ -74,9 +77,9 @@ case "$1" in
     build_deps
     ;;
   *)
-    echo "Usage: $0 --clean | --init | --init-deps | --build-deps"
+    echo "Usage: $0 --clean | --build-main | --init-deps | --build-deps"
     echo "  --clean       Clean the build directory"
-    echo "  --init        Initialize and build the project"
+    echo "  --build-main  Build main projects"
     echo "  --init-deps   Fetch dependencies"
     echo "  --build-deps  Build dependencies"
     exit 1
