@@ -7,6 +7,8 @@
 
 #include <sys/stat.h>
 
+#include <gflags/gflags.h>
+
 #define SIZE_1G (1024 * 1024 * 1024)
 #define SIZE_1M (1024 * 1024)
 #define SIZE_1K (1024)
@@ -42,6 +44,7 @@ bool populateData(uint32_t *data, size_t size) {
 }
 
 int main(int argc, char **argv) {
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (mkdir("files", 0755) == -1) {
     if (errno == EEXIST) {
       printf("files directory already exists.\n");
