@@ -2,8 +2,8 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <sys/stat.h>
 
@@ -22,11 +22,15 @@ void generateFile(uint32_t *data, size_t size, char *fileName) {
   size_t bytes_to_write = size;
   while (bytes_to_write) {
     auto bytes = write(fd, data + (size - bytes_to_write), bytes_to_write);
+    if (bytes < 0) {
+      printf("Failed to write block. Exiting.\n");
+      exit(1);
+    }
     bytes_to_write -= bytes;
     if (bytes_to_write == 0) {
       break;
     }
-    if (bytes != size) {
+    if ((size_t)bytes != size) {
       printf("Didn't write all bytes.\n");
       printf("Wrote %ld bytes but expected to write %lu.\n", bytes, size);
     }
@@ -64,13 +68,13 @@ int main(int argc, char **argv) {
 
     char filename[16] = {'\0'};
     if (i / SIZE_1G > 0) {
-      sprintf(filename, "files/%luG", i / SIZE_1G);
+      snprintf(filename, 16, "files/%luG", i / SIZE_1G);
     } else if (i / SIZE_1M > 0) {
-      sprintf(filename, "files/%luM", i / SIZE_1M);
+      snprintf(filename, 16, "files/%luM", i / SIZE_1M);
     } else if (i / SIZE_1K > 0) {
-      sprintf(filename, "files/%luK", i / SIZE_1K);
+      snprintf(filename, 16, "files/%luK", i / SIZE_1K);
     } else {
-      sprintf(filename, "files/%lub", i);
+      snprintf(filename, 16, "files/%lub", i);
     }
     printf("Generating file %s\n", filename);
     generateFile(data, i, filename);
