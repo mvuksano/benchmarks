@@ -17,22 +17,16 @@ fi
 
 # Function to build the project
 build_project() {
-
   # Build root project
-  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1
+  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_PREFIX_PATH=$LIB_INSTALL_DIR
   cmake --build build
 }
 
 # Function to clean the build directory
 clean_build() {
-  # Change to the benchmark directory
-  cd "$(dirname "$0")/benchmark"
-
-  # Remove the build directory
-  rm -rf build
-
-  # Change back to the project root directory
-  cd ..
+  rm -rf "$(dirname "$0")/benchmark/build"
+  rm -rf "$(dirname "$0")/gflags/_build"
+  rm -rf "$(dirname "$0")/installed"
 }
 
 # Function to fetch all git submodules (dependecies)
