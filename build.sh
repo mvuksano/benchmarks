@@ -42,9 +42,11 @@ build_deps() {
   # Create the build directory
   cmake -E make_directory "build"
   # Change to the build directory, run cmake and go back to the benchmark directory
-  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../
+  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR
   # Build the project with the specified configuration
   cmake --build "build" --config Release ${OPTS:+--} ${OPTS}
+  # Install benchmark
+  cmake --build "build" --config Release --target install ${OPTS:+--} ${OPTS}
   # Change back to the project root directory
   cd ..
 

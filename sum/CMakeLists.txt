@@ -1,6 +1,5 @@
+find_package(benchmark REQUIRED)
 add_executable(sum sum.cc sum_naive.h sum_naive.cc)
-target_include_directories(sum PUBLIC "${CMAKE_SOURCE_DIR}/benchmark/include")
-target_link_directories(sum PUBLIC "${CMAKE_SOURCE_DIR}/benchmark/build/src")
-target_link_libraries(sum benchmark pthread)
+target_link_libraries(sum benchmark::benchmark pthread)
 set_source_files_properties(sum_naive.cc PROPERTIES COMPILE_FLAGS "-mno-avx")
 set_source_files_properties(sum.cc PROPERTIES COMPILE_FLAGS "-mavx512f -mavx512dq")
