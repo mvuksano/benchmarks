@@ -53,6 +53,12 @@ init_deps() {
   git submodule update --init --recursive
 }
 
+build_deps() {
+  cd "$(dirname "$0")/gflags"
+  cmake -B _build -S . -DBUILD_STATIC_LIBS=ON
+  cmake --build _build
+}
+
 # Check the input option and call the corresponding function
 case "$1" in
   --clean)
@@ -64,11 +70,15 @@ case "$1" in
   --init-deps)
     init_deps
     ;;
+  --build-deps)
+    build_deps
+    ;;
   *)
-    echo "Usage: $0 --clean | --init | --init-deps"
+    echo "Usage: $0 --clean | --init | --init-deps | --build-deps"
     echo "  --clean       Clean the build directory"
     echo "  --init        Initialize and build the project"
     echo "  --init-deps   Fetch dependencies"
+    echo "  --build-deps  Build dependencies"
     exit 1
     ;;
 esac
