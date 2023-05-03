@@ -49,7 +49,7 @@ bool populateData(uint32_t *data, size_t size) {
 
 int main(int argc, char **argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
-  if (mkdir("files", 0755) == -1) {
+  if (mkdir("generated", 0755) == -1) {
     if (errno == EEXIST) {
       printf("files directory already exists.\n");
     } else {
@@ -68,15 +68,14 @@ int main(int argc, char **argv) {
 
     char filename[16] = {'\0'};
     if (i / SIZE_1G > 0) {
-      snprintf(filename, 16, "files/%luG", i / SIZE_1G);
+      snprintf(filename, 16, "generated/%luG", i / SIZE_1G);
     } else if (i / SIZE_1M > 0) {
-      snprintf(filename, 16, "files/%luM", i / SIZE_1M);
+      snprintf(filename, 16, "generated/%luM", i / SIZE_1M);
     } else if (i / SIZE_1K > 0) {
-      snprintf(filename, 16, "files/%luK", i / SIZE_1K);
+      snprintf(filename, 16, "generated/%luK", i / SIZE_1K);
     } else {
-      snprintf(filename, 16, "files/%lub", i);
+      snprintf(filename, 16, "generated/%lub", i);
     }
-    printf("Generating file %s\n", filename);
     generateFile(data, i, filename);
   }
 
