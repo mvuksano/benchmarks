@@ -51,9 +51,9 @@ int main(int argc, char **argv) {
   gflags::ParseCommandLineFlags(&argc, &argv, true);
   if (mkdir("generated", 0755) == -1) {
     if (errno == EEXIST) {
-      printf("files directory already exists.\n");
+      printf("'generated' directory already exists.\n");
     } else {
-      printf("Could not create files directory.\n");
+      printf("Could not create 'generated' directory.\n");
       exit(1);
     }
   }

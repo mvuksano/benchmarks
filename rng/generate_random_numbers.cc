@@ -1,11 +1,23 @@
+#include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <sys/stat.h>
+
 int main(int argc, char **argv) {
-  int nums_fd = open("nums", O_CREAT | O_RDWR | O_TRUNC, 0644);
+  if (mkdir("generated", 0755) == -1) {
+    if (errno == EEXIST) {
+      printf("'generated' directory already exists.\n");
+    } else {
+      printf("Could not create 'generated' directory.\n");
+      exit(1);
+    }
+  }
+
+  int nums_fd = open("generated/nums", O_CREAT | O_RDWR | O_TRUNC, 0644);
   if (nums_fd < 0) {
     printf("Could not open file \"nums\".\n");
     exit(1);
