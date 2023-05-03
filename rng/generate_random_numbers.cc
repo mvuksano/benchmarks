@@ -4,20 +4,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 #include <sys/stat.h>
+#include <gflags/gflags.h>
+
+#include <string>
+
+DEFINE_string(out_dir, "generated", "Directory where to store file with generated numbers");
 
 int main(int argc, char **argv) {
-  if (mkdir("generated", 0755) == -1) {
+  gflags::ParseCommandLineFlags(&argc, &argv, true);
+  std::string filePath = FLAGS_out_dir + "/nums";
+
+  if (mkdir(FLAGS_out_dir.c_str(), 0755) == -1) {
     if (errno == EEXIST) {
-      printf("'generated' directory already exists.\n");
+      printf("'%s' directory already exists.\n", FLAGS_out_dir.c_str());
     } else {
-      printf("Could not create 'generated' directory.\n");
+      printf("Could not create '%s' directory.\n", FLAGS_out_dir.c_str());
       exit(1);
     }
   }
 
-  int nums_fd = open("generated/nums", O_CREAT | O_RDWR | O_TRUNC, 0644);
+  int nums_fd = open(filePath.c_str(), O_CREAT | O_RDWR | O_TRUNC, 0644);
   if (nums_fd < 0) {
     printf("Could not open file \"nums\".\n");
     exit(1);
