@@ -2,7 +2,14 @@
 
 # Detect the operating system
 OS=$(uname)
+PROJECT_DIR=$(realpath $(dirname "$0"))
 LIB_INSTALL_DIR=$(realpath $(dirname "$0"))/installed
+CPP_COMPILER=$(which clang++ 2>/dev/null)
+if [ -z $CPP_COMPILER ]; then
+  # Check here for latest version instead of just presence of compiler.
+  echo "Error: clang++ compiler not found."
+  exit 1
+fi
 
 OPTS=""
 
@@ -18,7 +25,7 @@ fi
 # Function to build the project
 build_project() {
   # Build root project
-  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_PREFIX_PATH=$LIB_INSTALL_DIR
+  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_PREFIX_PATH=$LIB_INSTALL_DIR ${CPP_COMPILER:+-DCMAKE_CXX_COMPILER=$CPP_COMPILER} 
   cmake --build build
 }
 
@@ -42,7 +49,7 @@ build_deps() {
   # Create the build directory
   cmake -E make_directory "build"
   # Change to the build directory, run cmake and go back to the benchmark directory
-  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR
+  cmake -E chdir "build" cmake -DBENCHMARK_DOWNLOAD_DEPENDENCIES=on -DCMAKE_BUILD_TYPE=Release ../ -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR ${CPP_COMPILER:+-DCMAKE_CXX_COMPILER=$CPP_COMPILER} 
   # Build the project with the specified configuration
   cmake --build "build" --config Release ${OPTS:+--} ${OPTS}
   # Install benchmark
@@ -52,10 +59,16 @@ build_deps() {
 
   # Change to gflags directory
   cd "$(dirname "$0")/gflags"
-  cmake -B _build -S . -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR
+  cmake -B _build -S . -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR ${CPP_COMPILER:+-DCMAKE_CXX_COMPILER=$CPP_COMPILER} 
   cmake --build _build
   cd _build
   make install
+
+  Change to glog directory
+  cd "$PROJECT_DIR/glog"
+  cmake -S . -B build -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_INSTALL_PREFIX=$LIB_INSTALL_DIR ${CPP_COMPILER:+-DCMAKE_CXX_COMPILER=$CPP_COMPILER}
+  cmake --build build
+  cmake --build build --target install
 }
 
 # Check the input option and call the corresponding function
