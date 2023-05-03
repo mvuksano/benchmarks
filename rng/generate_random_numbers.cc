@@ -17,16 +17,17 @@ int main(int argc, char **argv) {
 	  exit(1);
   }
 
-  char buf[64];
+  size_t buf_size = 64 * sizeof(uint32_t);
+  char buf[buf_size];
 
   for (int i = 0; i < 1024 * 1024; i++) {
-    if (read(rand_fd, buf, 64) != 64) {
+    if (read(rand_fd, buf, buf_size) != buf_size) {
 	    // If we didn't read 64 bytes then discard this block
 	    // and try again.
 	    i--;
 	    continue;
     };
-    write(nums_fd, buf, 64);
+    write(nums_fd, buf, buf_size);
   }
   close(nums_fd);
   close(rand_fd);
